@@ -15,7 +15,19 @@ const Footer = () => {
         setFormData({ ...formData, [name]: value });
     }
     const handeSubmit = () => {
+        setLoading(true);
+        const contact = {
+            _type: 'contact',
+            name: name,
+            email: email,
+            message: message
+        }
 
+        client.create(contact)
+            .then(() => {
+                setLoading(false);
+                setIsFormSubmitted(true);
+            })
     }
     return (
         <>
@@ -33,21 +45,29 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className='app__footer-form app__flex'>
-                <div className="app__flex">
-                    <input type="text" className="p-text" name='name' placeholder='Your Name' value={name} onChange={handeChangeInput} />
-                    <input type="email" className="p-text" name='email' placeholder='Your Email' value={email} onChange={handeChangeInput} />
+            {!isFormSubmitted
+                ? <div className='app__footer-form app__flex'>
+                    <div className="app__flex">
+                        <input type="text" className="p-text" name='name' placeholder='Your Name' value={name} onChange={handeChangeInput} />
+                    </div>
+                    <div className="app__flex">
+                        <input type="email" className="p-text" name='email' placeholder='Your Email' value={email} onChange={handeChangeInput} />
+                    </div>
+                    <div>
+                        <textarea
+                            className='p-text'
+                            placeholder='Your Message'
+                            value={message}
+                            name="message"
+                            onChange={handeChangeInput} />
+                    </div>
+                    <button type='button' className='p-text' onChange={handeSubmit}>{loading ? 'Sending' : 'Send Message'}</button>
                 </div>
-                <div>
-                    <textarea
-                        className='p-text'
-                        placeholder='Your Message'
-                        value={message}
-                        name="message"
-                        onChange={handeChangeInput} />
+
+                : <div>
+                    <h3 className='head-text'>Thank you for getting in touch !</h3>
                 </div>
-                <button type='button' className='p-text' onChange={handeSubmit}>{loading ? 'Sending' : 'Send Message'}</button>
-            </div>
+            }
 
         </>
     )
